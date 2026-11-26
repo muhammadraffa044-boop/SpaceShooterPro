@@ -4,8 +4,7 @@ name: Build Space Shooter APK
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
@@ -26,14 +25,17 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Check Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          sdkmanager --version
 
       - name: Install Android SDK
         run: |
+          yes | sdkmanager --licenses
           sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Extract Game Project
+      - name: Extract Project
         run: |
           unzip -q SpaceShooterPro-Android-Project.zip -d project
           cd project/SpaceShooterPro
